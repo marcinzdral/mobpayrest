@@ -1,0 +1,135 @@
+[
+  {
+    "pumpId": 1,
+    "status": "UNAVAILABLE_CLOSED",
+    "mobileAuthEnabled": false,
+    "nozzles": [
+      {
+        "nozzleId": 1,
+        "fuelName": null,
+        "fuelDisplayName": "miles 92",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030919"
+      },
+      {
+        "nozzleId": 2,
+        "fuelName": null,
+        "fuelDisplayName": "Miles 95",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030921"
+      },
+      {
+        "nozzleId": 3,
+        "fuelName": null,
+        "fuelDisplayName": "milesPLUS D",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030876"
+      },
+      {
+        "nozzleId": 4,
+        "fuelName": null,
+        "fuelDisplayName": "Miles Diesel",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030931"
+      },
+      {
+        "nozzleId": 5,
+        "fuelName": null,
+        "fuelDisplayName": "Sprinklervæske",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030932"
+      },
+      {
+        "nozzleId": 6,
+        "fuelName": null,
+        "fuelDisplayName": "miles92",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030919"
+      }
+    ]
+  },
+  {
+    "pumpId": 2,
+    "status": "AVAILABLE",
+    "mobileAuthEnabled": true,
+    "nozzles": [
+      {
+        "nozzleId": 1,
+        "fuelName": null,
+        "fuelDisplayName": "miles 92",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030919"
+      },
+      {
+        "nozzleId": 2,
+        "fuelName": null,
+        "fuelDisplayName": "Miles 95",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030921"
+      },
+      {
+        "nozzleId": 3,
+        "fuelName": null,
+        "fuelDisplayName": "milesPLUS D",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030876"
+      },
+      {
+        "nozzleId": 4,
+        "fuelName": null,
+        "fuelDisplayName": "Miles Diesel",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030931"
+      }
+    ]
+  },
+  {
+    "pumpId": 3,
+    "status": "AVAILABLE",
+    "mobileAuthEnabled": true,
+    "nozzles": [
+      {
+        "nozzleId": 1,
+        "fuelName": null,
+        "fuelDisplayName": "miles 92",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030919"
+      },
+      {
+        "nozzleId": 2,
+        "fuelName": null,
+        "fuelDisplayName": "Miles 95",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030921"
+      },
+      {
+        "nozzleId": 3,
+        "fuelName": null,
+        "fuelDisplayName": "milesPLUS D",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030876"
+      },
+      {
+        "nozzleId": 4,
+        "fuelName": null,
+        "fuelDisplayName": "Miles Diesel",
+        "fuelPrice": 0,
+        "fuelItemNo": "1030931"
+      }
+    ]
+  },
+  {
+    "pumpId": 4,
+    "status": "UNAVAILABLE_CLOSED",
+    "mobileAuthEnabled": false,
+    "nozzles": [
+      {
+        "nozzleId": 1,
+        "fuelName": null,
+        "fuelDisplayName": "Adblue",
+        "fuelPrice": 0,
+        "fuelItemNo": "579716"
+      }
+    ]
+  }
+]
