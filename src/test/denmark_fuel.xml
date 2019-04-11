@@ -15,6 +15,7 @@
             <class name="fuel.VerifyReservation" />
             <class name="fuel.UnlockNozzle" />
             <class name="fuel.CheckFuelingStatusServiceReady" />
+            <class name="fuel.CheckFuelingStatusServiceFinanced" />
         </classes>
     </test>
 </suite>
