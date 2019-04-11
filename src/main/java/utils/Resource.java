@@ -8,6 +8,7 @@ public class Resource {
     private final String mobilePayUrl = "https://mobilepay-mock-stable.test.gneis.io";
     private String orderId;
     private float presetAmount;
+    private float totalAmount;
     private int pumpId;
     private int siteId;
 
@@ -38,6 +39,14 @@ public class Resource {
 
     public float getPresetAmount() {
         return presetAmount;
+    }
+
+    public float getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(float totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public void setPresetAmount(float presetAmount) {

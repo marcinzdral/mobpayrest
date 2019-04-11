@@ -19,7 +19,7 @@ public class PostNewFuelOrder extends BaseCore {
         Response response =
                 given()
                         .contentType(ContentType.JSON)
-                        .with().body(getBody())
+                        .with().body(this.getBody())
                         .when()
                         .request("POST", resource.getMobileBackendUrl() + "/orders/fuel/create")
                         .then()

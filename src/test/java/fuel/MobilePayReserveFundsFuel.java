@@ -12,11 +12,11 @@ import static io.restassured.RestAssured.given;
 public class MobilePayReserveFundsFuel extends BaseCore {
 
     @Test(groups = {"denmark.fuel"})
-    public void reserveFunds() {
+    public void reserveFunds_fuel() {
 
         given()
                 .contentType(ContentType.JSON)
-                .with().body(getBody())
+                .with().body(this.getBody())
                 .when()
                         .request("POST", resource.getMobilePayUrl() + "/orders/" + resource.getOrderId() + "/_reserve_funds")
                 .then()

@@ -1,10 +1,10 @@
 package fuel;
 
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import utils.*;
 
-import static io.restassured.RestAssured.when;
-import static org.hamcrest.Matchers.hasItem;
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
 
 public class GetAvailablePumps extends BaseCore {
 
@@ -15,8 +15,7 @@ public class GetAvailablePumps extends BaseCore {
                 .request("GET", resource.getMobileBackendUrl() + "/sites/10555/pumps")
                 .then()
                 .assertThat()
-                .statusCode(200)
-                .and()
-                .body("status", hasItem("AVAILABLE"));
+                .statusCode(200).and()
+                .body("status", equalTo("AVAILABLE"));
     }
 }

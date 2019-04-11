@@ -10,14 +10,14 @@ import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
-public class PostNewCarWashOrder extends BaseCore {
+public class PostNewCarwashOrder extends BaseCore {
 
     @Test(groups = {"denmark.carwash"})
     public void createNewCarWashOrder() {
         Response response =
                 given()
                         .contentType(ContentType.JSON)
-                        .with().body(getBody())
+                        .with().body(this.getBody())
                         .when()
                         .request("POST", resource.getMobileBackendUrl() + "/orders/carwash/create")
                         .then()
@@ -25,6 +25,7 @@ public class PostNewCarWashOrder extends BaseCore {
                         .extract().response();
 
         resource.setOrderId(response.path("orderId"));
+        resource.setTotalAmount(response.path("totalAmount"));
     }
 
 
