@@ -14,6 +14,9 @@
             <class name="carwash.CheckCarwashStatusReserved" />
             <class name="carwash.CheckCarwashStatusWaitingForCustomer" />
             <class name="carwash.AuthorizeCarwash" />
+            <class name="carwash.CheckCarwashStatusServiceReady" />
+            <class name="carwash.CheckCarwashStatusServiceInUse" />
+            <class name="carwash.CheckCarwashStatusServiceCompleted" />
         </classes>
     </test>
 </suite>

@@ -8,14 +8,15 @@ import java.util.concurrent.*;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasKey;
 
-public class CheckCarwashStatusWaitingForCustomer extends BaseCore {
+public class CheckCarwashStatusServiceInUse extends BaseCore {
 
     @Test(groups = {"denmark.carwash"})
-    public void checkCarwashStatus_waitingForCustomer() {
+    public void checkCarwashStatus_serviceInUse() {
 
-        Awaitility.await().atMost(10, TimeUnit.SECONDS).until(() -> this.getCarwashStatus().equals("WAITING_FOR_CUSTOMER"));
-        Awaitility.setDefaultPollInterval(200, TimeUnit.MILLISECONDS);
+        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(() -> this.getCarwashStatus().equals("SERVICE_IN_USE"));
+        Awaitility.setDefaultPollInterval(1000, TimeUnit.MILLISECONDS);
 
         given()
                 .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getOrderId())
@@ -23,10 +24,9 @@ public class CheckCarwashStatusWaitingForCustomer extends BaseCore {
                 .statusCode(200)
                 .assertThat()
                 .body("id", equalTo(resource.getOrderId())).and()
-                .body("status", equalTo("WAITING_FOR_CUSTOMER")).and()
-                .body("stayIn", equalTo(true)).and()
-                .body("washpointsStatuses[0].washpointNo", equalTo(1)).and()
-                .body("washpointsStatuses[0].available", equalTo(true));
+                .body("status", equalTo("SERVICE_IN_USE")).and()
+                .body("$", hasKey("remainingTime"));
+
     }
 
     private String getCarwashStatus() {
@@ -38,5 +38,5 @@ public class CheckCarwashStatusWaitingForCustomer extends BaseCore {
                 .extract()
                 .jsonPath().get("status");
     }
-
 }
+
