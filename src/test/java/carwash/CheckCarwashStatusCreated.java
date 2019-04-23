@@ -18,6 +18,6 @@ public class CheckCarwashStatusCreated extends BaseCore {
                 .statusCode(200)
                 .assertThat()
                 .body("id", equalTo(resource.getOrderId())).and()
-                .body("status", equalTo("CREATED"));
+                .body("status", equalTo(CarwashStatus.CREATED.getValue()));
     }
 }

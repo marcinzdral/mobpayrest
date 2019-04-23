@@ -17,7 +17,7 @@ public class CheckCarwashStatusReserved extends BaseCore {
                 .statusCode(200)
                 .assertThat()
                 .body("id", equalTo(resource.getOrderId())).and()
-                .body("status", equalTo("RESERVED")).and()
+                .body("status", equalTo(CarwashStatus.RESERVED.getValue())).and()
                 .body("stayIn", equalTo(true));
     }
 }

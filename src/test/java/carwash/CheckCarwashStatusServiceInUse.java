@@ -15,7 +15,7 @@ public class CheckCarwashStatusServiceInUse extends BaseCore {
     @Test(groups = {"denmark.carwash"})
     public void checkCarwashStatus_serviceInUse() {
 
-        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(() -> this.getCarwashStatus().equals("SERVICE_IN_USE"));
+        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(() -> this.getCarwashStatus().equals(CarwashStatus.SERVICE_IN_USE.getValue()));
         Awaitility.setDefaultPollInterval(1000, TimeUnit.MILLISECONDS);
 
         given()
@@ -24,7 +24,7 @@ public class CheckCarwashStatusServiceInUse extends BaseCore {
                 .statusCode(200)
                 .assertThat()
                 .body("id", equalTo(resource.getOrderId())).and()
-                .body("status", equalTo("SERVICE_IN_USE")).and()
+                .body("status", equalTo(CarwashStatus.SERVICE_IN_USE.getValue())).and()
                 .body("$", hasKey("remainingTime"));
 
     }

@@ -18,7 +18,7 @@ public class CheckFuelingStatusCreated extends BaseCore {
                 .statusCode(200)
                 .assertThat()
                 .body("id", equalTo(resource.getOrderId())).and()
-                .body("status", equalTo("CREATED")).and()
+                .body("status", equalTo(FuelStatus.CREATED.getValue())).and()
                 .body("siteId", equalTo(resource.getSiteId())).and()
                 .body("$", hasKey("created")).and()
                 .body("$", hasKey("modified"));

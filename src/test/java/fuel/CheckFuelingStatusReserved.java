@@ -19,7 +19,7 @@ public class CheckFuelingStatusReserved extends BaseCore {
                 .body("$", hasKey("created")).and()
                 .body("$", hasKey("modified")).and()
                 .body("id", equalTo(resource.getOrderId())).and()
-                .body("status", equalTo("RESERVED")).and()
+                .body("status", equalTo(FuelStatus.RESERVED.getValue())).and()
                 .body("pumpId", equalTo(resource.getPumpId()));
     }
 }

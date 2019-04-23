@@ -15,7 +15,7 @@ public class CheckCarwashStatusServiceCompleted extends BaseCore {
     @Test(groups = {"denmark.carwash"})
     public void checkCarwashStatus_serviceCompleted() {
 
-        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(() -> this.getCarwashStatus().equals("SERVICE_COMPLETED"));
+        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(() -> this.getCarwashStatus().equals(CarwashStatus.SERVICE_COMPLETED.getValue()));
         Awaitility.setDefaultPollInterval(1000, TimeUnit.MILLISECONDS);
 
         given()
@@ -24,7 +24,7 @@ public class CheckCarwashStatusServiceCompleted extends BaseCore {
                 .statusCode(200)
                 .assertThat()
                 .body("id", equalTo(resource.getOrderId())).and()
-                .body("status", equalTo("SERVICE_COMPLETED")).and()
+                .body("status", equalTo(CarwashStatus.SERVICE_COMPLETED.getValue())).and()
                 .body("$", hasKey("receipt"));
 
     }

@@ -14,7 +14,7 @@ public class CheckFuelingStatusServiceFinanced extends BaseCore {
     @Test(groups = {"denmark.fuel"})
     public void checkFuelingStatus_serviceFinanced() {
 
-        Awaitility.await().atMost(60, TimeUnit.SECONDS).until(() -> this.getFuelingStatus().equals("SERVICE_FINANCED"));
+        Awaitility.await().atMost(60, TimeUnit.SECONDS).until(() -> this.getFuelingStatus().equals(FuelStatus.SERVICE_FINANCED.getValue()));
         Awaitility.setDefaultPollInterval(2, TimeUnit.SECONDS);
 
         when()
@@ -23,7 +23,7 @@ public class CheckFuelingStatusServiceFinanced extends BaseCore {
                 .statusCode(200)
                 .assertThat()
                 .body("id", equalTo(resource.getOrderId())).and()
-                .body("status", equalTo("SERVICE_FINANCED")).and()
+                .body("status", equalTo(FuelStatus.SERVICE_FINANCED.getValue())).and()
                 .body("pumpId", equalTo(resource.getPumpId())).and()
                 .body("size()", is(17));
 

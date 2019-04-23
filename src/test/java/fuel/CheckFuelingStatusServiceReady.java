@@ -19,7 +19,7 @@ public class CheckFuelingStatusServiceReady extends BaseCore {
                 .body("$", hasKey("created")).and()
                 .body("$", hasKey("modified")).and()
                 .body("id", equalTo(resource.getOrderId())).and()
-                .body("status", equalTo("SERVICE_READY")).and()
+                .body("status", equalTo(FuelStatus.SERVICE_READY.getValue())).and()
                 .body("pumpId", equalTo(resource.getPumpId())).and()
                 .body("size()", is(5));
     }

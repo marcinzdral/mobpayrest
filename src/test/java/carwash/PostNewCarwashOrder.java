@@ -14,6 +14,7 @@ public class PostNewCarwashOrder extends BaseCore {
 
     @Test(groups = {"denmark.carwash"})
     public void createNewCarWashOrder() {
+
         Response response =
                 given()
                         .contentType(ContentType.JSON)
