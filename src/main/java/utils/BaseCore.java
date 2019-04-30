@@ -1,5 +1,6 @@
 package utils;
 
+import org.apache.log4j.*;
 import org.testng.annotations.*;
 import requests.*;
 
@@ -10,6 +11,7 @@ public class BaseCore {
     protected Resource resource = Resource.getInstance();
     protected FuelRequest fuelRequest;
     protected CarwashRequest carwashRequest;
+    protected static final Logger LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
     @BeforeSuite
     public void setConfig() {
@@ -17,4 +19,9 @@ public class BaseCore {
         carwashRequest = new CarwashRequest();
     }
 
+    @BeforeMethod
+    public void print() {
+        System.out.println("method name");
+    }
 }
+
