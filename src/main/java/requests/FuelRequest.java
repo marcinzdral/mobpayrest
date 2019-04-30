@@ -5,6 +5,7 @@ import io.restassured.response.*;
 import org.awaitility.*;
 import utils.*;
 
+import java.util.*;
 import java.util.concurrent.*;
 
 import static io.restassured.RestAssured.*;
@@ -12,12 +13,12 @@ import static org.hamcrest.Matchers.*;
 
 public class FuelRequest extends Body {
 
-    public FuelRequest postNewFuelOrder() {
+    public FuelRequest postNewFuelOrder(HashMap<String, Object> createData) {
 
         Response response;
         response = given()
                 .contentType(ContentType.JSON)
-                .with().body(getFuelBody_createOrder())
+                .with().body(createData)
                 .log().uri()
                 .log().method()
                 .log().body()
@@ -32,9 +33,10 @@ public class FuelRequest extends Body {
                 .extract().response();
 
         resource.setOrderId(response.path("orderId"));
+        resource.setProcessId(response.path("id"));
         resource.setPresetAmount(response.path("presetAmount"));
-        resource.setPumpId(((int) getFuelBody_createOrder().get("pumpId")));
-        resource.setSiteId((int) getFuelBody_createOrder().get("siteId"));
+        resource.setPumpId(((int) getFuelBody_createOrder_DK().get("pumpId")));
+        resource.setSiteId((int) getFuelBody_createOrder_DK().get("siteId"));
 
         return this;
     }
@@ -45,11 +47,11 @@ public class FuelRequest extends Body {
                 .log().uri()
                 .log().method()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("id", equalTo(resource.getOrderId())).and()
+                .body("id", equalTo(resource.getProcessId())).and()
                 .body("status", equalTo(FuelStatus.CREATED.getValue())).and()
                 .body("siteId", equalTo(resource.getSiteId())).and()
                 .body("$", hasKey("created")).and()
@@ -80,13 +82,13 @@ public class FuelRequest extends Body {
                 .log().uri()
                 .log().method()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
                 .body("$", hasKey("created")).and()
                 .body("$", hasKey("modified")).and()
-                .body("id", equalTo(resource.getOrderId())).and()
+                .body("id", equalTo(resource.getProcessId())).and()
                 .body("status", equalTo(FuelStatus.RESERVED.getValue())).and()
                 .body("pumpId", equalTo(resource.getPumpId()));
 
@@ -100,8 +102,9 @@ public class FuelRequest extends Body {
                 .log().uri()
                 .log().method()
                 .when()
-                .request("POST", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getOrderId() + "/verify-reserved")
+                .request("POST", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getProcessId() + "/verify-reserved")
                 .then()
+                .log().ifError()
                 .statusCode(200);
 
         return this;
@@ -113,7 +116,7 @@ public class FuelRequest extends Body {
                 .log().uri()
                 .log().method()
                 .when()
-                .request("POST", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getOrderId() + "/unlock-pump")
+                .request("POST", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getProcessId() + "/unlock-pump")
                 .then()
                 .statusCode(200);
 
@@ -126,13 +129,13 @@ public class FuelRequest extends Body {
                 .log().uri()
                 .log().method()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
                 .body("$", hasKey("created")).and()
                 .body("$", hasKey("modified")).and()
-                .body("id", equalTo(resource.getOrderId())).and()
+                .body("id", equalTo(resource.getProcessId())).and()
                 .body("status", equalTo(FuelStatus.SERVICE_READY.getValue())).and()
                 .body("pumpId", equalTo(resource.getPumpId())).and()
                 .body("size()", is(5));
@@ -140,20 +143,47 @@ public class FuelRequest extends Body {
         return this;
     }
 
-    public FuelRequest checkFuelingStatus_serviceFinanced() {
+    public FuelRequest checkFuelingStatus_serviceInUse() {
 
-        Awaitility.await().atMost(60, TimeUnit.SECONDS).until(() -> this.getFuelingStatus().equals(FuelStatus.SERVICE_FINANCED.getValue()));
+        Awaitility.await().atMost(60, TimeUnit.SECONDS).until(
+                () -> this.getFuelingStatus().equals(FuelStatus.SERVICE_IN_USE.getValue()));
         Awaitility.setDefaultPollInterval(2, TimeUnit.SECONDS);
 
-        when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getOrderId())
+        given()
+                .log().uri()
+                .log().method()
+                .when()
+                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("id", equalTo(resource.getOrderId())).and()
-                .body("status", equalTo(FuelStatus.SERVICE_FINANCED.getValue())).and()
+                .body("$", hasKey("created")).and()
+                .body("$", hasKey("modified")).and()
+                .body("id", equalTo(resource.getProcessId())).and()
+                .body("status", equalTo(FuelStatus.SERVICE_IN_USE.getValue())).and()
                 .body("pumpId", equalTo(resource.getPumpId())).and()
-                .body("size()", is(17));
+                .body("size()", is(5));
+
+        return this;
+
+    }
+
+    public FuelRequest checkFuelingStatus_serviceFinanced() {
+
+        Awaitility.await().atMost(80, TimeUnit.SECONDS).until(
+                () -> this.getFuelingStatus().equals(FuelStatus.SERVICE_FINANCED.getValue()));
+        Awaitility.setDefaultPollInterval(2, TimeUnit.SECONDS);
+
+        when()
+                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getProcessId())
+                .then()
+                .statusCode(200)
+                .assertThat()
+                .body("id", equalTo(resource.getProcessId())).and()
+                .body("status", equalTo(FuelStatus.SERVICE_FINANCED.getValue())).and()
+                .body("receipt.pumpId", equalTo(resource.getPumpId())).and()
+                .body("size()", is(3)).and()
+                .body("receipt.size()", is(16));
 
         return this;
     }
@@ -161,7 +191,7 @@ public class FuelRequest extends Body {
     private String getFuelingStatus() {
 
         return when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .extract()

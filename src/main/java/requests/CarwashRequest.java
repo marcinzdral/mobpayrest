@@ -5,6 +5,7 @@ import io.restassured.response.*;
 import org.awaitility.*;
 import utils.*;
 
+import java.util.*;
 import java.util.concurrent.*;
 
 import static io.restassured.RestAssured.given;
@@ -14,12 +15,12 @@ import static org.hamcrest.Matchers.hasKey;
 
 public class CarwashRequest extends Body {
 
-    public CarwashRequest postNewCarwashOrder() {
+    public CarwashRequest postNewCarwashOrder(HashMap<String, Object> createData) {
 
         Response response =
                 given()
                         .contentType(ContentType.JSON)
-                        .with().body(getCarwashBody_createOrder())
+                        .with().body(createData)
                         .log().uri()
                         .log().method()
                         .when()
@@ -29,7 +30,13 @@ public class CarwashRequest extends Body {
                         .extract().response();
 
         resource.setOrderId(response.path("orderId"));
+        resource.setProcessId(response.path("id"));
         resource.setTotalAmount(response.path("totalAmount"));
+
+        String stay = createData.get("userLocationDuringCarwash").toString();
+        boolean stayIn = stay.equals("STAY_IN");
+
+        resource.setStayIn(stayIn);
 
         return this;
     }
@@ -40,11 +47,11 @@ public class CarwashRequest extends Body {
                 .log().uri()
                 .log().method()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("id", equalTo(resource.getOrderId())).and()
+                .body("id", equalTo(resource.getProcessId())).and()
                 .body("status", equalTo(CarwashStatus.CREATED.getValue()));
 
         return this;
@@ -65,39 +72,55 @@ public class CarwashRequest extends Body {
         return this;
     }
 
+    public CarwashRequest verifyReservation() {
+
+        given()
+                .header("Content-Type", "application/json")
+                .log().uri()
+                .log().method()
+                .when()
+                .request("POST", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId() + "/verify-reserved")
+                .then()
+                .log().ifError()
+                .statusCode(200);
+
+        return this;
+    }
+
     public CarwashRequest checkCarwashStatus_reserved() {
 
         given()
                 .log().uri()
                 .log().method()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("id", equalTo(resource.getOrderId())).and()
+                .body("id", equalTo(resource.getProcessId())).and()
                 .body("status", equalTo(CarwashStatus.RESERVED.getValue())).and()
-                .body("stayIn", equalTo(true));
+                .body("stayIn", equalTo(resource.isStayIn()));
 
         return this;
     }
 
     public CarwashRequest checkCarwashStatus_waitingForCustomer() {
 
-        Awaitility.await().atMost(10, TimeUnit.SECONDS).until(() -> this.getCarwashStatus().equals(CarwashStatus.WAITING_FOR_CUSTOMER.getValue()));
-        Awaitility.setDefaultPollInterval(200, TimeUnit.MILLISECONDS);
+        Awaitility.await().atMost(60, TimeUnit.SECONDS).until(
+                () -> this.getCarwashStatus().equals(CarwashStatus.WAITING_FOR_CUSTOMER.getValue()));
+        Awaitility.setDefaultPollInterval(1000, TimeUnit.MILLISECONDS);
 
         given()
                 .log().uri()
                 .log().method()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("id", equalTo(resource.getOrderId())).and()
+                .body("id", equalTo(resource.getProcessId())).and()
                 .body("status", equalTo(CarwashStatus.WAITING_FOR_CUSTOMER.getValue())).and()
-                .body("stayIn", equalTo(true)).and()
+                .body("stayIn", equalTo(resource.isStayIn())).and()
                 .body("washpointsStatuses[0].washpointNo", equalTo(1)).and()
                 .body("washpointsStatuses[0].available", equalTo(true));
 
@@ -112,7 +135,7 @@ public class CarwashRequest extends Body {
                 .contentType(ContentType.JSON)
                 .with().body(getCarwashBody_authorizeCarwash())
                 .when()
-                .request("POST", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getOrderId() + "/start-carwash")
+                .request("POST", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId() + "/start-carwash")
                 .then()
                 .statusCode(200);
 
@@ -120,35 +143,37 @@ public class CarwashRequest extends Body {
     }
 
     public CarwashRequest checkCarwashStatus_serviceReady() {
+
         given()
                 .log().uri()
                 .log().method()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("id", equalTo(resource.getOrderId())).and()
+                .body("id", equalTo(resource.getProcessId())).and()
                 .body("status", equalTo(CarwashStatus.SERVICE_READY.getValue())).and()
-                .body("stayIn", equalTo(true));
+                .body("stayIn", equalTo(resource.isStayIn()));
 
         return this;
     }
 
     public CarwashRequest checkCarwashStatus_serviceInUse() {
 
-        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(() -> this.getCarwashStatus().equals(CarwashStatus.SERVICE_IN_USE.getValue()));
+        Awaitility.await().atMost(60, TimeUnit.SECONDS).until(
+                () -> this.getCarwashStatus().equals(CarwashStatus.SERVICE_IN_USE.getValue()));
         Awaitility.setDefaultPollInterval(1000, TimeUnit.MILLISECONDS);
 
         given()
                 .log().uri()
                 .log().method()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("id", equalTo(resource.getOrderId())).and()
+                .body("id", equalTo(resource.getProcessId())).and()
                 .body("status", equalTo(CarwashStatus.SERVICE_IN_USE.getValue())).and()
                 .body("$", hasKey("remainingTime"));
 
@@ -157,18 +182,19 @@ public class CarwashRequest extends Body {
 
     public CarwashRequest checkCarwashStatus_serviceCompleted() {
 
-        Awaitility.await().atMost(30, TimeUnit.SECONDS).until(() -> this.getCarwashStatus().equals(CarwashStatus.SERVICE_COMPLETED.getValue()));
+        Awaitility.await().atMost(60, TimeUnit.SECONDS).until(
+                () -> this.getCarwashStatus().equals(CarwashStatus.SERVICE_COMPLETED.getValue()));
         Awaitility.setDefaultPollInterval(1000, TimeUnit.MILLISECONDS);
 
         given()
                 .log().uri()
                 .log().method()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
-                .body("id", equalTo(resource.getOrderId())).and()
+                .body("id", equalTo(resource.getProcessId())).and()
                 .body("status", equalTo(CarwashStatus.SERVICE_COMPLETED.getValue())).and()
                 .body("$", hasKey("receipt"));
 
@@ -180,7 +206,7 @@ public class CarwashRequest extends Body {
     private String getCarwashStatus() {
 
         return when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getOrderId())
+                .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .extract()
