@@ -5,7 +5,7 @@ import utils.*;
 
 import java.util.*;
 
-public class CarwashProcessNewApproach extends BaseCore {
+public class CarwashFullHappyPath extends BaseCore {
 
     @Test(dataProviderClass = DataProviderManager.class, dataProvider = "carwash_bu")
     public void carwashProcessFullOrder(HashMap<String, Object> createData) {

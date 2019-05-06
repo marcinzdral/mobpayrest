@@ -22,7 +22,6 @@ public class CarwashRequest extends Body {
                         .contentType(ContentType.JSON)
                         .with().body(createData)
                         .log().uri()
-                        .log().method()
                         .when()
                         .request("POST", resource.getMobileBackendUrl() + "/orders/carwash/create")
                         .then()
@@ -33,8 +32,8 @@ public class CarwashRequest extends Body {
         resource.setProcessId(response.path("id"));
         resource.setTotalAmount(response.path("totalAmount"));
 
-        String stay = createData.get("userLocationDuringCarwash").toString();
-        boolean stayIn = stay.equals("STAY_IN");
+        String stayValue = createData.get("userLocationDuringCarwash").toString();
+        boolean stayIn = stayValue.equals("STAY_IN");
 
         resource.setStayIn(stayIn);
 
@@ -45,7 +44,6 @@ public class CarwashRequest extends Body {
 
         given()
                 .log().uri()
-                .log().method()
                 .when()
                 .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
@@ -63,7 +61,6 @@ public class CarwashRequest extends Body {
                 .contentType(ContentType.JSON)
                 .with().body(getCarwashBody_reserveFunds())
                 .log().uri()
-                .log().method()
                 .when()
                 .request("POST", resource.getMobilePayUrl() + "/orders/" + resource.getOrderId() + "/_reserve_funds")
                 .then()
@@ -77,7 +74,6 @@ public class CarwashRequest extends Body {
         given()
                 .header("Content-Type", "application/json")
                 .log().uri()
-                .log().method()
                 .when()
                 .request("POST", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId() + "/verify-reserved")
                 .then()
@@ -91,7 +87,6 @@ public class CarwashRequest extends Body {
 
         given()
                 .log().uri()
-                .log().method()
                 .when()
                 .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
@@ -112,7 +107,6 @@ public class CarwashRequest extends Body {
 
         given()
                 .log().uri()
-                .log().method()
                 .when()
                 .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
@@ -131,7 +125,6 @@ public class CarwashRequest extends Body {
 
         given()
                 .log().uri()
-                .log().method()
                 .contentType(ContentType.JSON)
                 .with().body(getCarwashBody_authorizeCarwash())
                 .when()
@@ -146,7 +139,6 @@ public class CarwashRequest extends Body {
 
         given()
                 .log().uri()
-                .log().method()
                 .when()
                 .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
@@ -167,7 +159,6 @@ public class CarwashRequest extends Body {
 
         given()
                 .log().uri()
-                .log().method()
                 .when()
                 .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()
@@ -188,7 +179,6 @@ public class CarwashRequest extends Body {
 
         given()
                 .log().uri()
-                .log().method()
                 .when()
                 .request("GET", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId())
                 .then()

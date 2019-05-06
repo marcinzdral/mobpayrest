@@ -5,12 +5,13 @@ import utils.*;
 
 import java.util.*;
 
-public class FuelProcessNewApproach extends BaseCore {
+public class FuelFullHappyPath extends BaseCore {
 
     @Test(dataProviderClass = DataProviderManager.class, dataProvider = "fuel_bu")
     public void fuelProcessFullOrder(HashMap<String, Object> createData) {
 
         fuelRequest
+                .hasAvailablePump()
                 .postNewFuelOrder(createData)
                 .checkFuelingStatus_created()
                 .reserveFunds_fuel()

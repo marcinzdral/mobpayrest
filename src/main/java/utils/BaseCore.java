@@ -18,10 +18,5 @@ public class BaseCore {
         fuelRequest = new FuelRequest();
         carwashRequest = new CarwashRequest();
     }
-
-    @BeforeMethod
-    public void print() {
-        System.out.println("method name");
-    }
 }
 
