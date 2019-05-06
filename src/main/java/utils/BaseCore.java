@@ -4,6 +4,8 @@ import org.apache.log4j.*;
 import org.testng.annotations.*;
 import requests.*;
 
+import java.util.ResourceBundle;
+
 @Listeners({org.uncommons.reportng.HTMLReporter.class})
 public class BaseCore {
 
@@ -12,6 +14,7 @@ public class BaseCore {
     protected FuelRequest fuelRequest;
     protected CarwashRequest carwashRequest;
     protected static final Logger LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
+    protected static ResourceBundle rb = ResourceBundle.getBundle("global");
 
     @BeforeSuite
     public void setConfig() {

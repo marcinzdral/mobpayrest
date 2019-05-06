@@ -13,16 +13,23 @@ import static org.hamcrest.Matchers.*;
 
 public class FuelRequest extends Body {
 
+    public FuelRequest mavenTest() {
+        System.out.println(rb.getString("mbUrl"));
+
+        return this;
+    }
+
+
     public FuelRequest hasAvailablePump() {
 
         given()
                 .log().uri()
                 .when()
-                .request("GET", "${mbUrl}" + "/sites/" + getFuelBody_createOrder_DK().get("siteId") + "/pumps")
+                .request("GET", resource.getMobileBackendUrl() + "/sites/" + getFuelBody_createOrder_DK().get("siteId") + "/pumps")
                 .then()
                 .assertThat()
                 .statusCode(200).and()
-                .body("status.any {it == 'AVAILABLE xxx'}", is(true));
+                .body("status.any {it == 'AVAILABLE'}", is(true));
 
         return this;
     }

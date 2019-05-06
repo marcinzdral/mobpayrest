@@ -79,20 +79,20 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
-                <executions>
-                    <execution>
-                        <id>show-profiles</id>
-                        <phase>compile</phase>
-                    </execution>
-                </executions>
                 <configuration>
-                    <source>12</source>
-                    <target>12</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -101,9 +101,21 @@
     <profiles>
         <profile>
             <id>test</id>
-            <properties>
-                <mbUrl>https://mobile-backend.test.gneis.io/api/v1</mbUrl>
-            </properties>
+            <build>
+                <finalName>${project.artifactId}-test</finalName>
+                <filters>
+                    <filter>src/main/resources/filters/test.properties</filter>
+                </filters>
+            </build>
+        </profile>
+        <profile>
+            <id>test-dev</id>
+            <build>
+                <finalName>${project.artifactId}-test-dev</finalName>
+                <filters>
+                    <filter>src/main/resources/filters/test-dev.properties</filter>
+                </filters>
+            </build>
         </profile>
     </profiles>
 
