@@ -7,7 +7,7 @@ import java.util.*;
 
 public class FuelFullHappyPath extends BaseCore {
 
-    //@Test(dataProviderClass = DataProviderManager.class, dataProvider = "fuel_bu")
+    @Test(dataProviderClass = DataProviderManager.class, dataProvider = "fuel_bu")
     public void fuelProcessFullOrder(HashMap<String, Object> createData) {
 
         fuelRequest

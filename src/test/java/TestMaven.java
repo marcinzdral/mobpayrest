@@ -6,6 +6,6 @@ public class TestMaven extends BaseCore {
     @Test
     public void mavenTest() {
         fuelRequest
-                .mavenTest();
+                .hasAvailablePump();
     }
 }

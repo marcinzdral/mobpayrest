@@ -13,6 +13,8 @@ import static org.hamcrest.Matchers.*;
 
 public class FuelRequest extends Body {
 
+    String mobileBackendURL = rb.getString("mbUrl");
+
     public FuelRequest mavenTest() {
         System.out.println(rb.getString("mbUrl"));
 
@@ -25,7 +27,7 @@ public class FuelRequest extends Body {
         given()
                 .log().uri()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/sites/" + getFuelBody_createOrder_DK().get("siteId") + "/pumps")
+                .request("GET", mobileBackendURL + "/sites/" + getFuelBody_createOrder_DK().get("siteId") + "/pumps")
                 .then()
                 .assertThat()
                 .statusCode(200).and()
@@ -43,7 +45,7 @@ public class FuelRequest extends Body {
                 .log().uri()
                 .log().body()
                 .when()
-                .request("POST", resource.getMobileBackendUrl() + "/orders/fuel/create")
+                .request("POST", mobileBackendURL + "/orders/fuel/create")
                 .then()
                 .statusCode(200)
                 .assertThat()
@@ -66,7 +68,7 @@ public class FuelRequest extends Body {
         given()
                 .log().uri()
                 .when()
-                .request("GET", resource.getMobileBackendUrl() + "/orders/fuel/" + resource.getProcessId())
+                .request("GET", mobileBackendURL + "/orders/fuel/" + resource.getProcessId())
                 .then()
                 .statusCode(200)
                 .assertThat()
