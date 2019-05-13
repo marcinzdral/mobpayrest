@@ -2,6 +2,7 @@ package requests;
 
 import io.restassured.http.*;
 import io.restassured.response.*;
+import org.apache.log4j.*;
 import org.awaitility.*;
 import utils.*;
 
@@ -14,15 +15,19 @@ import static org.hamcrest.Matchers.*;
 public class FuelRequest extends Body {
 
     String mobileBackendURL = rb.getString("mbUrl");
+    static Logger log = Logger.getLogger(FuelRequest.class);
+
 
     public FuelRequest mavenTest() {
-        System.out.println(rb.getString("mbUrl"));
+        System.out.println(mobileBackendURL);
 
         return this;
     }
 
 
     public FuelRequest hasAvailablePump() {
+
+        log.info("hasAvailablePump");
 
         given()
                 .log().uri()
@@ -32,6 +37,8 @@ public class FuelRequest extends Body {
                 .assertThat()
                 .statusCode(200).and()
                 .body("status.any {it == 'AVAILABLE'}", is(true));
+
+
 
         return this;
     }
