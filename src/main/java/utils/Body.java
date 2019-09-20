@@ -16,7 +16,7 @@ public class Body extends BaseCore {
 
     protected Map<String, Object> getFuelBody_reserveFunds() {
         Map<String, Object> body = new HashMap<>();
-        body.put("Amount", resource.getPresetAmount());
+        body.put("Amount", resource.getTotalAmount());
 
         return body;
     }

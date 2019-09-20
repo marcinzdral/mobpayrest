@@ -28,7 +28,7 @@ public class CarwashRequest extends Body {
                         .statusCode(200)
                         .extract().response();
 
-        resource.setOrderId(response.path("orderId"));
+        resource.setOrderId(response.path("pspOrderReference"));
         resource.setProcessId(response.path("id"));
         resource.setTotalAmount(response.path("totalAmount"));
 
@@ -131,6 +131,14 @@ public class CarwashRequest extends Body {
                 .request("POST", resource.getMobileBackendUrl() + "/orders/carwash/" + resource.getProcessId() + "/start-carwash")
                 .then()
                 .statusCode(200);
+
+        return this;
+    }
+
+    public CarwashRequest startCarwashSimultaneously() {
+
+        this.startCarwash();
+        this.startCarwash();
 
         return this;
     }
