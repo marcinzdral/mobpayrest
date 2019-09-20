@@ -137,8 +137,6 @@ public class CarwashRequest extends Body {
 
     public CarwashRequest startCarwashSimultaneously() {
 
-        this.startCarwash();
-        this.startCarwash();
 
         return this;
     }
